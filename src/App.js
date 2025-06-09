@@ -1,25 +1,136 @@
-import logo from './logo.svg';
-import './App.css';
+// src/App.js
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Navigation from './components/Navigation';
+import AddUser from './add';
+import DeleteUser from './delete';
+import FindUser from './find';
+import { useEffect, useState } from 'react';
+import { collection, getDocs } from 'firebase/firestore';
+import { db,auth, provider } from './firebase';
+import { signInWithPopup, signOut, onAuthStateChanged } from 'firebase/auth';
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+  const [user, setUser] = useState(null); // Firebaseユーザー
+  const [dbUsers, setdbUsers] = useState([]); // Firesroreのデータ
 
-export default App;
+useEffect(() => {
+// Firestoreからusersコレクションを取得
+const fetchUsers = async () => {
+const usersCol = collection(db, 'mydata');
+const userSnapshot = await getDocs(usersCol);
+const userList = userSnapshot.docs.map(doc => ({
+id: doc.id,
+...doc.data()
+}));
+setdbUsers(userList);
+};
+
+// 認証状態を監視
+const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+  setUser(currentUser);
+ 
+  });
+  fetchUsers();
+  return () => unsubscribe();
+  
+    
+  
+
+}, []);
+
+// Googleログイン処理
+const handleLogin = async () => {
+try {
+await signInWithPopup(auth, provider);
+} catch (error) {
+console.error("ログインエラー :", error);
+}
+};
+// ログアウト処理
+const handleLogout = async () => {
+try {
+await signOut(auth);
+} catch (error) {
+console.error("ログアウトエラー :", error);
+}
+};
+
+return (
+  <Router>
+<Navigation /> {/* ← ナビゲーションをここ䛻表示 */}
+
+<div className="p-4 flex justify-end bg-gray-100">
+ {user ? (
+ <div>
+ <span className="mr-4">こんにちは、 {user.displayName} さん</span>
+ <button onClick={handleLogout} className="p-2 bg-red-500 text-white rounded">ログアウト </button>
+ </div>
+ ) : (
+ <button onClick={handleLogin} className="p-2 bg-blue-500 text-white rounded">Googleでログイン </button>
+ )}
+ </div>
+
+
+ 
+<Routes>
+<Route path="/" element={ 
+  <div className="overflow-x-auto">
+  <table className="min-w-full border border-gray-300 text-left table-fixed border-separate border-spacing-0">
+    <thead className="bg-gray-100">
+      <tr>
+        <th className="border border-gray-300 px-4 py-2 w-1/5">ID</th>
+        <th className="border border-gray-300 px-4 py-2 w-1/5">day</th>
+        <th className="border border-gray-300 px-4 py-2 w-1/5">Name</th>
+        <th className="border border-gray-300 px-4 py-2 w-1/5">call</th>
+        <th className="border border-gray-300 px-4 py-2 w-1/5">Dorm</th>
+      </tr>
+    </thead>
+    <tbody>
+      {user ? (
+        dbUsers.map(user => (
+          <tr key={user.id}>
+            <td className="border border-gray-300 px-4 py-2">{user.id}</td>
+            <td className="border border-gray-300 px-4 py-2">
+              {/* Timestamp を 日付文字列に変換 */}
+              {user.day && user.day.toDate
+              ? user.day.toDate().toLocaleDateString()
+              : '未設定'}
+           </td>
+            <td className="border border-gray-300 px-4 py-2">{user.name}</td>
+            <td className="border border-gray-300 px-4 py-2">{user.call}</td>
+            <td className="border border-gray-300 px-4 py-2">{user.dorm ? "寮生" : "通学"}</td>
+          </tr>
+        ))
+      ) : (
+        <tr>
+          <td colSpan={4} className="text-gray-600 p-4 text-center border border-gray-300">
+            ログインするとデータが見られます。
+          </td>
+        </tr>
+      )}
+    </tbody>
+  </table>
+</div>
+
+} />
+
+    {user ? (
+  <>
+  <Route path="/add" element={<AddUser />} />
+  <Route path="/delete" element={<DeleteUser />} />
+  <Route path="/find" element={<FindUser />} />
+  </>
+  ) : (
+  <>
+  <Route path="/add" element={<p>ログインしてください </p>} />
+  <Route path="/delete" element={<p>ログインしてください </p>} />
+  <Route path="/find" element={<p>ログインしてください </p>} />
+  </>
+  )}
+
+
+  </Routes>
+  </Router>
+  );
+  }
+  export default App;
