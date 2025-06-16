@@ -61,7 +61,7 @@ return (
 <Navigation /> {/* ← ナビゲーションをここ䛻表示 */}
 
 <div className="bg-gray-100 py-4 text-center text-2xl font-bold text-gray-800">
-  施設利用管理
+  タスク管理
 </div>
 
 <div className="p-4 flex justify-end bg-gray-100">
@@ -83,12 +83,11 @@ return (
   <table className="min-w-full border border-gray-300 text-left table-fixed border-separate border-spacing-0">
     <thead className="bg-gray-100">
       <tr>
-        <th className="border border-gray-300 px-4 py-2 w-1/6">ID</th>
-        <th className="border border-gray-300 px-4 py-2 w-1/6">day</th>
-        <th className="border border-gray-300 px-4 py-2 w-1/6">Name</th>
-        <th className="border border-gray-300 px-4 py-2 w-1/6">call</th>
-        <th className="border border-gray-300 px-4 py-2 w-1/6">Dorm</th>
-        <th className="border border-gray-300 px-4 py-2 w-1/6">edit</th>
+       
+        <th className="border border-gray-300 px-4 py-2 w-1/5">day</th>
+        <th className="border border-gray-300 px-4 py-2 w-1/5">task</th>
+        <th className="border border-gray-300 px-4 py-2 w-1/5">do</th>
+        <th className="border border-gray-300 px-4 py-2 w-1/5">edit</th>
 
       </tr>
     </thead>
@@ -96,16 +95,15 @@ return (
       {user ? (
         dbUsers.map(user => (
           <tr key={user.id}>
-            <td className="border border-gray-300 px-4 py-2">{user.id}</td>
+            
             <td className="border border-gray-300 px-4 py-2">
               {/* Timestamp を 日付文字列に変換 */}
               {user.day && user.day.toDate
               ? user.day.toDate().toLocaleDateString()
               : '未設定'}
            </td>
-            <td className="border border-gray-300 px-4 py-2">{user.name}</td>
-            <td className="border border-gray-300 px-4 py-2">{user.call}</td>
-            <td className="border border-gray-300 px-4 py-2">{user.dorm ? "利用中" : "退出済"}</td>
+            <td className="border border-gray-300 px-4 py-2">{user.task}</td>
+            <td className="border border-gray-300 px-4 py-2">{user.dou ? "実行中" : "実行済"}</td>
             <td className="border border-gray-300 px-4 py-2">
                 <Link
                   to={`/edit/${user.id}`}

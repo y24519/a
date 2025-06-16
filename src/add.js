@@ -8,9 +8,8 @@ import {Timestamp} from "firebase/firestore";
 
 function AddUser() {
   const [day, setDay] = useState('');
-  const [name, setName] = useState('');
-  const [call, setCall] = useState('');
-  const [dorm, setDorm] = useState(true);
+  const [task, setTask] = useState('');
+  const [dou, setDo] = useState(true);
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -19,9 +18,8 @@ function AddUser() {
     try {
       await addDoc(collection(db, 'mydata'), {
         day: Timestamp.fromDate(new Date(day)),
-        name,
-        call,
-        dorm,
+        task,
+        dou,
       });
       alert('ユーザーを追加しました');
       navigate('/');
@@ -52,36 +50,26 @@ function AddUser() {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">名前</label>
+          <label className="block text-sm font-medium text-gray-700 mb-1">タスク</label>
           <input
             type="text"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
+            value={task}
+            onChange={(e) => setTask(e.target.value)}
             required
             className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
           />
         </div>
 
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">電話</label>
-          <input
-            type="number"
-            value={call}
-            onChange={(e) => setCall(e.target.value)}
-            required
-            className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
-          />
-        </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">区分</label>
+          <label className="block text-sm font-medium text-gray-700 mb-1">実行</label>
           <select
-            value={dorm}
-            onChange={(e) => setDorm(e.target.value === 'true')}
+            value={dou}
+            onChange={(e) => setDo(e.target.value === 'true')}
             className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
           >
-            <option value="true">利用中</option>
-            <option value="false">退出済</option>
+            <option value="true">実行中</option>
+            <option value="false">実行済</option>
           </select>
         </div>
 

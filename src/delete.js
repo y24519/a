@@ -38,16 +38,15 @@ function DeleteUser() {
 
   return (
     <div className="min-h-screen bg-gray-100 p-6">
-      <h2 className="text-2xl font-bold mb-4 text-center">ユーザー削除ページ</h2>
+      <h2 className="text-2xl font-bold mb-4 text-center">タスク削除ページ</h2>
 
       <div className="overflow-x-auto">
         <table className="min-w-full border border-gray-300 text-left table-fixed border-separate border-spacing-0">
           <thead className="bg-gray-100">
             <tr>
               <th className="border border-gray-300 px-4 py-2 w-1/5">day</th>
-              <th className="border border-gray-300 px-4 py-2 w-1/5">Name</th>
-              <th className="border border-gray-300 px-4 py-2 w-1/5">call</th>
-              <th className="border border-gray-300 px-4 py-2 w-1/5">Dorm</th>
+              <th className="border border-gray-300 px-4 py-2 w-1/5">task</th>
+              <th className="border border-gray-300 px-4 py-2 w-1/5">Do</th>
               <th className="border border-gray-300 px-4 py-2 w-1/5">Action</th>
             </tr>
           </thead>
@@ -57,9 +56,8 @@ function DeleteUser() {
                 <td className="border border-gray-300 px-4 py-2">
                   {user.day?.toDate ? user.day.toDate().toLocaleDateString() : '不明'}
                 </td>
-                <td className="border border-gray-300 px-4 py-2">{user.name}</td>
-                <td className="border border-gray-300 px-4 py-2">{user.call}</td>
-                <td className="border border-gray-300 px-4 py-2">{user.dorm ? '利用中' : '退出済'}</td>
+                <td className="border border-gray-300 px-4 py-2">{user.task}</td>
+                <td className="border border-gray-300 px-4 py-2">{user.dou ? '実行中' : '実行済'}</td>
                 <td className="border border-gray-300 px-4 py-2">
                   <button
                     onClick={() => deleteUser(user.id)}

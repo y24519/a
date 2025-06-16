@@ -9,9 +9,8 @@ function Edit() {
   const { id } = useParams();
   const [user, setUser] = useState(null);
   const [day, setDay] = useState('');
-  const [name, setName] = useState('');
-  const [call, setCall] = useState('');
-  const [dorm, setDorm] = useState(true);
+  const [task, setTask] = useState('');
+  const [dou, setDo] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -22,9 +21,8 @@ function Edit() {
         const data = docSnap.data();
         setUser(data);
         setDay(data.day.toDate().toISOString().split('T')[0]);
-        setName(data.name);
-        setCall(data.call);
-        setDorm(data.dorm);
+        setTask(data.task);
+        setDo(data.dou);
       } else {
         alert('ユーザーが見つかりませんでした');
         navigate('/');
@@ -40,9 +38,8 @@ function Edit() {
       const docRef = doc(db, 'mydata', id);
       await updateDoc(docRef, {
         day: Timestamp.fromDate(new Date(day)),
-        name,
-        call,
-        dorm,
+        task,
+        dou,
       });
       alert('ユーザー情報を更新しました');
       navigate('/');
@@ -56,7 +53,7 @@ function Edit() {
   return (
     <div className="min-h-screen p-6 text-center">
       
-      <h1 className="text-2xl font-bold mb-6">ユーザー編集</h1>
+      <h1 className="text-2xl font-bold mb-6">タスク編集</h1>
 
       <form
         onSubmit={handleSubmit}
@@ -74,36 +71,26 @@ function Edit() {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">名前</label>
+          <label className="block text-sm font-medium text-gray-700 mb-1">タスク</label>
           <input
             type="text"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
+            value={task}
+            onChange={(e) => setTask(e.target.value)}
             required
             className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
           />
         </div>
 
+ 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">電話</label>
-          <input
-            type="number"
-            value={call}
-            onChange={(e) => setCall(e.target.value)}
-            required
-            className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
-          />
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">区分</label>
+          <label className="block text-sm font-medium text-gray-700 mb-1">実行</label>
           <select
-            value={dorm}
-            onChange={(e) => setDorm(e.target.value === 'true')}
+            value={dou}
+            onChange={(e) => setDo(e.target.value === 'true')}
             className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
           >
-            <option value="true">寮生</option>
-            <option value="false">通学</option>
+            <option value="true">実行中</option>
+            <option value="false">実行済</option>
           </select>
         </div>
 
