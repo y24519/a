@@ -1,9 +1,10 @@
 // src/App.js
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import Navigation from './components/Navigation';
 import AddUser from './add';
 import DeleteUser from './delete';
 import FindUser from './find';
+import Edit from './Edit';
 import { useEffect, useState } from 'react';
 import { collection, getDocs } from 'firebase/firestore';
 import { db,auth, provider } from './firebase';
@@ -59,6 +60,10 @@ return (
   <Router>
 <Navigation /> {/* ← ナビゲーションをここ䛻表示 */}
 
+<div className="bg-gray-100 py-4 text-center text-2xl font-bold text-gray-800">
+  施設利用管理
+</div>
+
 <div className="p-4 flex justify-end bg-gray-100">
  {user ? (
  <div>
@@ -78,11 +83,13 @@ return (
   <table className="min-w-full border border-gray-300 text-left table-fixed border-separate border-spacing-0">
     <thead className="bg-gray-100">
       <tr>
-        <th className="border border-gray-300 px-4 py-2 w-1/5">ID</th>
-        <th className="border border-gray-300 px-4 py-2 w-1/5">day</th>
-        <th className="border border-gray-300 px-4 py-2 w-1/5">Name</th>
-        <th className="border border-gray-300 px-4 py-2 w-1/5">call</th>
-        <th className="border border-gray-300 px-4 py-2 w-1/5">Dorm</th>
+        <th className="border border-gray-300 px-4 py-2 w-1/6">ID</th>
+        <th className="border border-gray-300 px-4 py-2 w-1/6">day</th>
+        <th className="border border-gray-300 px-4 py-2 w-1/6">Name</th>
+        <th className="border border-gray-300 px-4 py-2 w-1/6">call</th>
+        <th className="border border-gray-300 px-4 py-2 w-1/6">Dorm</th>
+        <th className="border border-gray-300 px-4 py-2 w-1/6">edit</th>
+
       </tr>
     </thead>
     <tbody>
@@ -98,7 +105,16 @@ return (
            </td>
             <td className="border border-gray-300 px-4 py-2">{user.name}</td>
             <td className="border border-gray-300 px-4 py-2">{user.call}</td>
-            <td className="border border-gray-300 px-4 py-2">{user.dorm ? "寮生" : "通学"}</td>
+            <td className="border border-gray-300 px-4 py-2">{user.dorm ? "利用中" : "退出済"}</td>
+            <td className="border border-gray-300 px-4 py-2">
+                <Link
+                  to={`/edit/${user.id}`}
+                  className="text-blue-500 hover:underline"
+                >
+                  編集
+                </Link>
+</td>
+
           </tr>
         ))
       ) : (
@@ -119,12 +135,15 @@ return (
   <Route path="/add" element={<AddUser />} />
   <Route path="/delete" element={<DeleteUser />} />
   <Route path="/find" element={<FindUser />} />
+  <Route path="/edit/:id" element={<Edit />} />
   </>
   ) : (
   <>
   <Route path="/add" element={<p>ログインしてください </p>} />
   <Route path="/delete" element={<p>ログインしてください </p>} />
   <Route path="/find" element={<p>ログインしてください </p>} />
+  <Route path="/edit/:id" element={user ? <Edit /> : <p>ログインしてください</p>} />
+
   </>
   )}
 

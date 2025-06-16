@@ -59,7 +59,7 @@ function DeleteUser() {
                 </td>
                 <td className="border border-gray-300 px-4 py-2">{user.name}</td>
                 <td className="border border-gray-300 px-4 py-2">{user.call}</td>
-                <td className="border border-gray-300 px-4 py-2">{user.dorm ? '寮生' : '通学'}</td>
+                <td className="border border-gray-300 px-4 py-2">{user.dorm ? '利用中' : '退出済'}</td>
                 <td className="border border-gray-300 px-4 py-2">
                   <button
                     onClick={() => deleteUser(user.id)}

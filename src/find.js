@@ -36,7 +36,7 @@ function FindUserPage() {
 
   return (
     <div className="min-h-screen bg-gray-100 p-6">
-      <Navigation />
+      
       <h2 className="text-2xl font-bold mb-4 text-center">ユーザー検索ページ</h2>
 
       <div className="max-w-md mx-auto mb-6">
@@ -63,7 +63,7 @@ function FindUserPage() {
               <tr key={user.id}>
                 <td className="border border-gray-300 px-4 py-2">{user.name}</td>
                 <td className="border border-gray-300 px-4 py-2">{user.mail}</td>
-                <td className="border border-gray-300 px-4 py-2">{user.dorm ? '寮生' : '通学'}</td>
+                <td className="border border-gray-300 px-4 py-2">{user.dorm ? '利用中' : '退出済'}</td>
               </tr>
             ))}
             {filteredUsers.length === 0 && (
